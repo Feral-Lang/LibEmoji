@@ -1,0 +1,2 @@
+# LibEmoji
+Emojis for Feral 😁
