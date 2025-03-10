@@ -1,0 +1,8 @@
+let assert = import('std/assert');
+
+let emoji = import('emoji/emoji');
+
+let smiley = emoji.fromShort('grin');
+assert.eq(smiley, '😁');
+let short = emoji.toShort(smiley);
+assert.eq(short, 'grin');

@@ -1,0 +1,42 @@
+# Emojis JSON file comes from https://gist.githubusercontent.com/oliveratgithub/0bf11a9aff0d6da7b46f1490f86a71eb/raw/d8e4b78cfe66862cf3809443c1dba017f37b61db/emojis.json
+
+let io = import('std/io');
+let fs = import('std/fs');
+let map = import('std/map');
+let fecl = import('std/fecl');
+let json = import('std/json');
+let logging = import('std/logging');
+
+logging.addTarget(io.stderr, logging.Levels.INFO);
+
+logging.info('Loading emojis json file ...');
+let jsonStr = fs.fopen(fs.pathFrom(__SRC_DIR__, 'emojis.json'), 'r').readAll();
+let data = json.loads(jsonStr);
+
+logging.info('Finished loading, now generating fecl equivalent ...');
+
+let fullMap = map.new(refs = true);
+
+for item in data['emojis'].each() {
+	if item.shortname.empty() {
+		logging.warn('Empty shortname for emoji: "', item.emoji, '", skipping it');
+		continue;
+	}
+	item.erase('html');
+	item.erase('order');
+	item.erase('unicode');
+	let shortname = item.shortname.replace(':', '');
+	item.erase('shortname');
+	fullMap.insert(shortname, item);
+}
+
+let feclData = fecl.dumps(fullMap, 0, '\t');
+
+logging.info('Generated fecl equivalent, writing to file ...');
+
+{
+	let outFile = fs.fopen(fs.pathFrom(__SRC_DIR__, '..', 'include', 'emojis.fecl'), 'w+');
+	io.fprintln(outFile, feclData);
+}
+
+logging.info('Finished!');
