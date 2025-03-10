@@ -1,0 +1,16 @@
+let io = import('std/io');
+let fs = import('std/fs');
+let fecl = import('std/fecl');
+
+let emojis = fecl.loads(fs.fopen(fs.pathFrom(__SRC_DIR__, 'emojis.fecl'), 'r').readAll());
+
+let fromShort = fn(shortname) { return emojis[shortname].emoji; };
+
+let toShort = fn(emoji) {
+	for item in emojis.each() {
+		if item.1.emoji == emoji {
+			return item.0;
+		}
+	}
+	return nil;
+};
