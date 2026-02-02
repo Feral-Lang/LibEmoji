@@ -30,7 +30,7 @@ for item in data['emojis'].each() {
     fullMap.insert(shortname, item);
 }
 
-let feclData = fecl.dumps(fullMap, 0, '\t');
+let feclData = fecl.dumps(fullMap, 0, '    ');
 
 logging.info('Generated fecl equivalent, writing to file ...');
 

@@ -4,11 +4,22 @@ let fecl = import('std/fecl');
 
 let emojis = fecl.loads(fs.fopen(fs.pathFrom(__SRC_DIR__, 'emojis.fecl'), 'r').readAll());
 
-let fromShort = fn(shortname) { return emojis[shortname].emoji; };
+"
+  fn(shortname) -> Str | Nil
+Returns the emoji of `shortname` as a string, or `nil` if the shortname is not a valid emoji.
+"
+let fromShort = fn(shortname) {
+    if !emojis.find(shortname) { return nil; }
+    return emojis[shortname].emoji;
+};
 
-let toShort = fn(emoji) {
+"
+  fn(emojiStr) -> Str | Nil
+Returns the shortname for the emoji in `emojiStr` as a string, or `nil` if the emojiStr does not represent a valid emoji.
+"
+let toShort = fn(emojiStr) {
     for item in emojis.each() {
-        if item.1.emoji == emoji {
+        if item.1.emoji == emojiStr {
             return item.0;
         }
     }
