@@ -2,15 +2,15 @@ let io = import('std/io');
 let fs = import('std/fs');
 let fecl = import('std/fecl');
 
-let emojis = fecl.loads(fs.fopen(fs.pathFrom(__SRC_DIR__, 'emojis.fecl'), 'r').readAll());
+let emojiMap = import('./emojiMap').emojis;
 
 "
   fn(shortname) -> Str | Nil
 Returns the emoji of `shortname` as a string, or `nil` if the shortname is not a valid emoji.
 "
 let fromShort = fn(shortname) {
-    if !emojis.find(shortname) { return nil; }
-    return emojis[shortname].emoji;
+    if !emojiMap.find(shortname) { return nil; }
+    return emojiMap[shortname].emoji;
 };
 
 "
@@ -18,7 +18,7 @@ let fromShort = fn(shortname) {
 Returns the shortname for the emoji in `emojiStr` as a string, or `nil` if the emojiStr does not represent a valid emoji.
 "
 let toShort = fn(emojiStr) {
-    for item in emojis.each() {
+    for item in emojiMap.each() {
         if item.1.emoji == emojiStr {
             return item.0;
         }

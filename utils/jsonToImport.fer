@@ -7,16 +7,34 @@ let fecl = import('std/fecl');
 let json = import('std/json');
 let logging = import('std/logging');
 
-logging.addTarget(io.stderr, logging.Levels.INFO);
+logging.addTarget(io.stdout, logging.Levels.INFO);
 
 logging.info('Loading emojis json file ...');
-let jsonStr = fs.fopen(fs.pathFrom(__SRC_DIR__, 'emojis.json'), 'r').readAll();
+let jsonStr = fs.fopen(__SRC_DIR__ / 'emojis.json', 'r').readAll();
 let data = json.loads(jsonStr);
 
-logging.info('Finished loading, now generating fecl equivalent ...');
+logging.info('Generating Feral import ...');
 
-let fullMap = map.new(refs = true);
+let scriptBoilerPlate = "
+let map = import('std/map');
 
+let Emoji = struct(
+    category = '',
+    name = '',
+    emoji = ''
+);
+
+let emojis = map.new(refs = true);
+
+";
+
+let scriptTemplate = "emojis.insert('{shortname}', Emoji('{item.category}', '{item.name}', '{item.emoji}'));";
+
+let outFile = fs.fopen(__SRC_DIR__ / '..' / 'include' / 'emojiMap.fer', 'w+');
+io.fprintln(outFile, scriptBoilerPlate);
+
+let sorter = fn(itemA, itemB) { return itemA.shortname < itemB.shortname; };
+data['emojis'].sort(sorter);
 for item in data['emojis'].each() {
     if item.shortname.empty() {
         logging.warn('Empty shortname for emoji: "', item.emoji, '", skipping it');
@@ -27,16 +45,7 @@ for item in data['emojis'].each() {
     item.erase('unicode');
     let shortname = item.shortname.replace(':', '');
     item.erase('shortname');
-    fullMap.insert(shortname, item);
-}
-
-let feclData = fecl.dumps(fullMap, 0, '    ');
-
-logging.info('Generated fecl equivalent, writing to file ...');
-
-{
-    let outFile = fs.fopen(fs.pathFrom(__SRC_DIR__, '..', 'include', 'emojis.fecl'), 'w+');
-    io.fprintln(outFile, feclData);
+    io.fprintln(outFile, scriptTemplate.fmt());
 }
 
 logging.info('Finished!');
