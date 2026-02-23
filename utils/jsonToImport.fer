@@ -28,7 +28,7 @@ let emojis = map.new(refs = true);
 
 ";
 
-let scriptTemplate = "emojis.insert('{shortname}', Emoji('{item.category}', '{item.name}', '{item.emoji}'));";
+let scriptTemplate = "emojis.insert('$<<shortname>>', Emoji('$<<item.category>>', '$<<item.name>>', '$<<item.emoji>>'));";
 
 let outFile = fs.fopen(__SRC_DIR__ / '..' / 'include' / 'emojiMap.fer', 'w+');
 io.fprintln(outFile, scriptBoilerPlate);
