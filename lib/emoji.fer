@@ -2,7 +2,7 @@ let io = import('std/io');
 let fs = import('std/fs');
 let fecl = import('std/fecl');
 
-let emojiMap = import('./emojiMap').emojis;
+let emojiMap = ref(import('./emojiMap').emojis);
 
 "
   fn(shortname) -> Str | Nil
