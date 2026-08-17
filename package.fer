@@ -1,10 +1,14 @@
 let vec = import('std/vec');
 let package = import('std/package');
 
-let pkg = package.new(
-    name = 'Emoji',
-    desc = 'Emojis for Feral 😁',
-    version = '0.1.0',
-    feral = '>=2.2.1',
-    author = vec.new('Chirag-Khandelwal <github@mail.chiragkh.me>')
-);
+let configure = fn(info) {
+    let pkg = package.new(
+        'Emoji',
+        desc = 'Emojis for Feral 😁',
+        version = '0.2.0',
+        feral = '>=2.2.1',
+        author = vec.new('Chirag-Khandelwal <github@mail.chiragkh.me>')
+    );
+
+    return feral.ok(pkg);
+};
