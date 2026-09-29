@@ -6,7 +6,7 @@ let configure = fn(info) {
         'Emoji',
         desc = 'Emojis for Feral 😁',
         version = '0.2.0',
-        feral = '>=2.2.1',
+        feral = '>=2.5.3',
         author = vec.new('Chirag-Khandelwal <github@mail.chiragkh.me>')
     );
 
